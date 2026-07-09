@@ -272,9 +272,10 @@ footer code{font-family:'IBM Plex Mono',monospace; background:var(--panel); bord
     <h3>Notas metodológicas</h3>
     <ul>
       <li><b>Anomalía mensual (PCP01–PCP12):</b> estadística zonal (media distrital) de los rásteres de anomalía porcentual de precipitación asociada a El Niño del Visor ENOS del Instituto Meteorológico Nacional (enos.imn.ac.cr), para cada mes del año, sobre 484 polígonos distritales (IGN/DTA).</li>
-      <li><b>Agregados anuales:</b> promedio, mediana y desviación estándar de los 12 valores mensuales de cada distrito, calculados en el navegador. Los meses en déficit y superávit de la ficha distrital usan una banda de neutralidad de ±5%: anomalías entre −5% y +5% se consideran meses neutros.</li>
+      <li><b>Agregados anuales:</b> promedio, mediana y desviación estándar de los 12 valores mensuales de cada distrito, calculados en el navegador. Los meses en déficit y superávit de la ficha distrital siguen la categorización oficial: un mes cuenta en déficit si su anomalía es inferior a −10% y en superávit si supera +10%; el rango entre −10% y +10% se considera Normal.</li>
       <li><b>IDS 2023:</b> Índice de Desarrollo Social distrital de MIDEPLAN y sus cinco dimensiones, escala 0–100.</li>
-      <li><b>Cuadrantes y zonas de exceso:</b> umbrales por defecto en las medianas de la métrica elegida (periodo del eje X) y del IDS, ajustables para análisis de sensibilidad. Los distritos con anomalía superior a +5% en el periodo elegido se clasifican como exceso hídrico (E1/E2 según IDS): su agenda de gestión es de inundación, no de sequía.</li>
+      <li><b>Categorización de la anomalía:</b> el mapa, la franja del encabezado, los perfiles mensuales y el calendario usan la escala oficial del visor ENOS: déficit muy severo (< −75%), severo (−75% a −50%), moderado (−50% a −25%), leve (−25% a −10%), Normal (−10% a +10%), superávit leve (+10% a +25%), moderado (+25% a +50%), alto (+50% a +75%) y muy alto (> +75%).</li>
+      <li><b>Cuadrantes y zonas de superávit:</b> umbrales por defecto en las medianas de la métrica elegida (periodo del eje X) y del IDS, ajustables para análisis de sensibilidad. Los distritos cuya anomalía del periodo elegido supera el rango Normal hacia el superávit (> +10%) se clasifican como E1/E2 según su IDS: su agenda de gestión es de inundación, no de sequía.</li>
       <li><b>Índice de prioridad combinado — qué es:</b> el promedio de dos puntajes z invertidos: el de la anomalía del periodo elegido (más seco ⇒ puntaje mayor) y el del IDS 2023 (menor desarrollo ⇒ puntaje mayor). Cada distrito se compara contra el promedio nacional en ambas variables y las dos brechas se combinan con igual peso.</li>
       <li><b>Índice de prioridad combinado — para qué sirve:</b> es una herramienta de <b>focalización y secuenciación</b>. Responde una pregunta operativa: si los recursos alcanzan para atender N distritos, ¿por cuáles empezar? Ordena los territorios donde coinciden las dos condiciones que justifican intervención pública subsidiada —mayor severidad de la sequía y menor capacidad social de respuesta—, de modo que un distrito muy seco pero desarrollado (que puede gestionar por mercado) o uno rezagado pero poco expuesto no desplacen a los que tienen ambos problemas a la vez. Por construir el orden con una regla explícita y replicable, cualquier tercero puede verificar por qué un distrito entró antes que otro, lo que lo hace útil para presupuestación, convenios y auditoría ciudadana.</li>
       <li><b>Índice de prioridad combinado — cómo leerlo y sus límites:</b> valores cercanos a 0 indican un distrito promedio en ambas dimensiones; valores altos (por ejemplo > 1), coincidencia de sequedad y rezago muy por encima del promedio; valores negativos, distritos menos expuestos o más desarrollados que la media. Es un ordenador de tamizaje, no un índice normativo: no mide riesgo absoluto ni daño esperado (no incorpora población, actividad económica ni infraestructura expuesta), no sustituye la verificación en campo y no aplica a la agenda de exceso hídrico (zonas E), donde la prioridad debe construirse con la lógica de inundación, no de sequedad.</li>
@@ -285,7 +286,7 @@ footer code{font-family:'IBM Plex Mono',monospace; background:var(--panel); bord
 
 <!-- ============ GESTIÓN ============ -->
 <section id="sec-gestion">
-  <p class="gr-intro">La lógica del portafolio es simple: <b>la exposición define el fenómeno a gestionar (sequía o inundación); el IDS define el tipo de instrumento; el calendario mensual define cuándo activarlo.</b> Los distritos con anomalía superior a +5% en el periodo elegido salen de la lógica de sequía y pasan al bloque E de exceso hídrico. Donde el desarrollo social es bajo, el Estado debe absorber más riesgo (inversión directa, protección social, aseguramiento subsidiado); donde es alto, puede apoyarse en instrumentos de mercado, regulación y autogestión. Los conteos se actualizan con los umbrales de la pestaña Cuadrante.</p>
+  <p class="gr-intro">La lógica del portafolio es simple: <b>la exposición define el fenómeno a gestionar (sequía o inundación); el IDS define el tipo de instrumento; el calendario mensual define cuándo activarlo.</b> Los distritos cuya anomalía del periodo elegido supera el rango Normal hacia arriba (> +10%) salen de la lógica de sequía y pasan al bloque E de superávit hídrico. Donde el desarrollo social es bajo, el Estado debe absorber más riesgo (inversión directa, protección social, aseguramiento subsidiado); donde es alto, puede apoyarse en instrumentos de mercado, regulación y autogestión. Los conteos se actualizan con los umbrales de la pestaña Cuadrante.</p>
   <div class="gr-grid">
     <div class="card gr-card" style="border-top-color:var(--q1); color:var(--q1)">
       <h3 style="color:var(--ink)">Q1 · Déficit severo + IDS bajo</h3>
@@ -321,7 +322,7 @@ footer code{font-family:'IBM Plex Mono',monospace; background:var(--panel); bord
       </ul>
     </div>
     <div class="card gr-card" style="border-top-color:#0E5F66; color:#0E5F66">
-      <h3 style="color:var(--ink)">E · Exceso hídrico (anomalía > +5%)</h3>
+      <h3 style="color:var(--ink)">E · Superávit hídrico (anomalía > +10%)</h3>
       <div class="gc-sub">Agenda de inundación, no de sequía — <span class="gc-count" id="gcE"></span> · Caribe y llanuras del norte</div>
       <ul style="color:var(--ink)">
         <li><b>SAT de inundación</b> en las cuencas del Caribe (Sixaola, La Estrella, ríos de Pococí y Sarapiquí) con protocolos de evacuación y albergues listos antes del pico de mayo.</li>
@@ -383,7 +384,7 @@ const median = arr => { const s=[...arr].sort((a,b)=>a-b); const m=Math.floor(s.
 const sdev = a=>{const m=mean(a); return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/(a.length-1));};
 
 // agregados por distrito
-const NEUTRAL_BAND = 5; // ±% dentro del cual el mes se considera neutro
+const NEUTRAL_BAND = 10; // rango "Normal" oficial del visor ENOS: −10% a +10%
 P.forEach(p=>{
   if(p.a12){ p.prom=+mean(p.a12).toFixed(1); p.medm=+median(p.a12).toFixed(1); p.sdm=+sdev(p.a12).toFixed(1);
     let wi=0; p.a12.forEach((v,i)=>{ if(v<p.a12[wi]) wi=i; }); p.worst=wi;
@@ -429,14 +430,25 @@ const quadOf = p => {
   return v<=thrA ? (p.ids<thrI?'Q1':'Q2') : (p.ids<thrI?'Q3':'Q4');
 };
 const QCOL = {Q1:'#A93226', Q2:'#C07A2B', Q3:'#33658A', Q4:'#4E8D5B', E1:'#0E5F66', E2:'#63A69C'};
-const QNAME = {Q1:'Q1 · Déficit severo + IDS bajo', Q2:'Q2 · Déficit severo + IDS alto', Q3:'Q3 · Déficit moderado + IDS bajo', Q4:'Q4 · Déficit moderado + IDS alto', E1:'E1 · Exceso hídrico + IDS bajo', E2:'E2 · Exceso hídrico + IDS alto'};
+const QNAME = {Q1:'Q1 · Mayor déficit + IDS bajo', Q2:'Q2 · Mayor déficit + IDS alto', Q3:'Q3 · Menor déficit + IDS bajo', Q4:'Q4 · Menor déficit + IDS alto', E1:'E1 · Superávit + IDS bajo', E2:'E2 · Superávit + IDS alto'};
 const ZONAS = ['Q1','Q2','Q3','Q4','E1','E2'];
 const fmt1 = v=> v==null? '—' : v.toLocaleString('es-CR',{minimumFractionDigits:1,maximumFractionDigits:1});
 
 /* ================== Escalas de color ================== */
-const dryRamp = d3.scaleLinear().domain([0,.2,.4,.6,.8,1]).range(['#F8EDD8','#E8C88A','#D19A4A','#A96A24','#7A4415','#4E2A0C']);
-const wetRamp = d3.scaleLinear().domain([0,.5,1]).range(['#DCEFEA','#2E7F80','#124E53']);
-const colAnom = v => v==null? '#CBD5D6' : (v<0 ? dryRamp(Math.min(1,-v/100)) : (v===0? '#F2F2EC' : wetRamp(Math.min(1,v/60))));
+/* Categorización oficial del visor ENOS (IMN) */
+const CATS = [
+  {max:-75,      n:'Déficit muy severo',  l:'Déficit muy severo (< −75%)',        c:'#4E2A0C'},
+  {max:-50,      n:'Déficit severo',      l:'Déficit severo (−75% a −50%)',       c:'#8A4E17'},
+  {max:-25,      n:'Déficit moderado',    l:'Déficit moderado (−50% a −25%)',     c:'#C08A3E'},
+  {max:-10,      n:'Déficit leve',        l:'Déficit leve (−25% a −10%)',         c:'#E7CC96'},
+  {max:10,       n:'Normal',              l:'Normal (−10% a +10%)',               c:'#F1F0E4'},
+  {max:25,       n:'Superávit leve',      l:'Superávit leve (+10% a +25%)',       c:'#BFDEDA'},
+  {max:50,       n:'Superávit moderado',  l:'Superávit moderado (+25% a +50%)',   c:'#7FB8B2'},
+  {max:75,       n:'Superávit alto',      l:'Superávit alto (+50% a +75%)',       c:'#35837F'},
+  {max:Infinity, n:'Superávit muy alto',  l:'Superávit muy alto (> +75%)',        c:'#124E53'}
+];
+const catOf = v => v==null? null : CATS.find(c=>v<c.max) || CATS[CATS.length-1];
+const colAnom = v => v==null? '#CBD5D6' : catOf(v).c;
 const idsRamp = d3.scaleLinear().domain([0,.5,1]).range(['#EDF3F1','#5D9C93','#0F4C5C']);
 const colIDS = v => v==null? '#CBD5D6' : idsRamp(v/100);
 const sdRamp = d3.scaleLinear().domain([0,.5,1]).range(['#F1EFF6','#9E8FC4','#4A3A78']);
@@ -537,9 +549,8 @@ function updateLegend(){
   const box=document.getElementById('legendBox'); let h='';
   if(curVar==='anom'){
     h='<h4>Anomalía · '+perLabel()+'</h4>';
-    [['≤ −90 %','#4E2A0C'],['−70 %','#7A4415'],['−50 %','#A96A24'],['−30 %','#D19A4A'],['−10 %','#E8C88A'],['0 %','#F2F2EC'],['+15 %','#2E7F80'],['≥ +60 %','#124E53']]
-      .forEach(([l,c])=>h+=`<div class="leg-row"><span class="leg-sw" style="background:${c}"></span>${l}</div>`);
-    h+='<div style="margin-top:4px;color:var(--muted)">Café = déficit · Verde-azul = exceso</div>';
+    CATS.forEach(c=>h+=`<div class="leg-row"><span class="leg-sw" style="background:${c.c}"></span>${c.l}</div>`);
+    h+='<div style="margin-top:4px;color:var(--muted)">Categorización oficial del visor ENOS (IMN)</div>';
   } else if(curVar==='sdm'){
     h='<h4>Variabilidad intermensual (σ)</h4>';
     [[0,'0'],[SD_MAX*.33,fmt1(SD_MAX*.33)],[SD_MAX*.66,fmt1(SD_MAX*.66)],[SD_MAX,fmt1(SD_MAX)+' (máx)']].forEach(([v,l])=>h+=`<div class="leg-row"><span class="leg-sw" style="background:${colSD(v)}"></span>${l}</div>`);
@@ -550,7 +561,7 @@ function updateLegend(){
   } else if(curVar==='quad'){
     h='<h4>Zonas · '+perLabel()+'</h4>';
     ZONAS.forEach(q=>h+=`<div class="leg-row"><span class="leg-sw" style="background:${QCOL[q]}"></span>${QNAME[q].slice(5)}</div>`);
-    h+='<div style="margin-top:4px;color:var(--muted)">E = anomalía > +'+NEUTRAL_BAND+'%: agenda de inundación</div>';
+    h+='<div style="margin-top:4px;color:var(--muted)">E = superávit (anomalía > +'+NEUTRAL_BAND+'%): agenda de inundación</div>';
   } else {
     h='<h4>Prioridad · '+perLabel()+'</h4>';
     [[riskExt[0],'Menor'],[(riskExt[0]+riskExt[1])/2,'Media'],[riskExt[1],'Máxima']].forEach(([v,l])=>h+=`<div class="leg-row"><span class="leg-sw" style="background:${colRisk(v)}"></span>${l}</div>`);
@@ -636,7 +647,7 @@ function detailHTML(p){
     <div class="d-geo">${p.c} · ${p.p} · ${fmt1(p.km2)} km² · <span class="mono">${p.k}</span></div>
     ${q?`<span class="d-quad" style="background:${QCOL[q]}">${QNAME[q]}</span>`:''}
     <div class="d-stats">
-      <div class="d-stat"><div class="v" style="color:${cur!=null&&cur<0?'#7A4415':'#124E53'}">${fmt1(cur)} %</div><div class="l">Anomalía · ${perLabel()}</div></div>
+      <div class="d-stat"><div class="v" style="color:${cur!=null&&cur<0?'#7A4415':'#124E53'}">${fmt1(cur)} %</div><div class="l">Anomalía · ${perLabel()}${cur!=null? '<br>'+catOf(cur).n : ''}</div></div>
       <div class="d-stat"><div class="v">${fmt1(p.ids)}</div><div class="l">IDS 2023 ${p.q? '· quintil '+p.q:''}</div></div>
       <div class="d-stat"><div class="v">${fmt1(p.medm)} %</div><div class="l">Mediana de 12 meses</div></div>
       <div class="d-stat"><div class="v">${p.ndef!=null? `<span style="color:#7A4415">${p.ndef}</span> · <span style="color:#124E53">${p.nsup}</span>`:'—'}</div><div class="l">Meses en déficit · superávit</div></div>
@@ -715,7 +726,7 @@ function drawQuad(){
   g.append('text').attr('x',4).attr('y',y(thrI)-5).attr('font-size',10.5).attr('fill','#17262E').attr('font-family','IBM Plex Mono').text('IDS '+fmt1(thrI));
   if(hasE){
     g.append('line').attr('x1',x(xE)).attr('x2',x(xE)).attr('y1',0).attr('y2',ih).attr('stroke','#0E5F66').attr('stroke-width',1.6).attr('opacity',.8);
-    g.append('text').attr('x',x(xE)+4).attr('y',26).attr('font-size',10.5).attr('fill','#0E5F66').attr('font-family','IBM Plex Mono').attr('font-weight',600).text('exceso hídrico ▶ (> +'+NEUTRAL_BAND+'%)');
+    g.append('text').attr('x',x(xE)+4).attr('y',26).attr('font-size',10.5).attr('fill','#0E5F66').attr('font-family','IBM Plex Mono').attr('font-weight',600).text('superávit ▶ (> +'+NEUTRAL_BAND+'%)');
   }
 
   const lab=(tx,ax,ay,anchor,col)=>g.append('text').attr('x',ax).attr('y',ay).attr('text-anchor',anchor).attr('font-size',11).attr('font-weight',600).attr('fill',col||'#5C6E76').text(tx);
@@ -725,8 +736,8 @@ function drawQuad(){
   lab('MENOS SECO + MENOR DESARROLLO', xR, ih-8, 'end');
   lab('MENOS SECO + MAYOR DESARROLLO', xR, 14, 'end');
   if(hasE && (x(xhi)-x(xE))>76){
-    lab('EXCESO', x(xE)+(x(xhi)-x(xE))/2, ih-8, 'middle', '#0E5F66');
-    lab('EXCESO', x(xE)+(x(xhi)-x(xE))/2, 14, 'middle', '#0E5F66');
+    lab('SUPERÁVIT', x(xE)+(x(xhi)-x(xE))/2, ih-8, 'middle', '#0E5F66');
+    lab('SUPERÁVIT', x(xE)+(x(xhi)-x(xE))/2, 14, 'middle', '#0E5F66');
   }
 
   const tip=document.getElementById('qTip'), holderCard=holder.parentElement;
@@ -739,7 +750,7 @@ function drawQuad(){
     .on('mousemove',function(ev,d){
       const r=holderCard.getBoundingClientRect();
       tip.style.opacity=1; tip.style.left=(ev.clientX-r.left+12)+'px'; tip.style.top=(ev.clientY-r.top-10)+'px';
-      tip.innerHTML=`<b>${d.n}</b> · ${d.c}<br>Anomalía <span class="mono">${fmt1(valOf(d))}%</span> · IDS <span class="mono">${fmt1(d.ids)}</span>`;
+      tip.innerHTML=`<b>${d.n}</b> · ${d.c}<br>Anomalía <span class="mono">${fmt1(valOf(d))}%</span> — ${catOf(valOf(d)).n}<br>IDS <span class="mono">${fmt1(d.ids)}</span>`;
       d3.select(this).attr('r',7);
     })
     .on('mouseleave',function(ev,d){ tip.style.opacity=0; if(d.k!==selKey) d3.select(this).attr('r',4.2); })
