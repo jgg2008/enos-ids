@@ -107,6 +107,12 @@ table.rank tr.rowc{cursor:pointer}
 table.rank tr.rowc:hover{background:var(--paper)}
 table.rank .mono{font-size:12px}
 
+.prov-legend{display:flex; gap:10px; flex-wrap:wrap; margin:2px 0 8px; font-size:11.5px; color:var(--muted)}
+.prov-legend span{display:inline-flex; align-items:center; gap:5px}
+.prov-legend i{width:10px; height:10px; border-radius:50%; display:inline-block}
+.tej-caption{font-size:12px; color:var(--muted); margin-top:6px}
+.tej-caption .mono{color:var(--ink)}
+.caveat{font-size:11.5px; color:var(--muted); border-top:1px solid var(--line); margin-top:12px; padding-top:8px}
 .an-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin-top:14px}
 .finding{border-left:4px solid var(--dry4)}
 .finding h3{font-size:15.5px; margin-bottom:6px}
@@ -128,7 +134,6 @@ table.rank .mono{font-size:12px}
 .gr-card li::before{content:''; position:absolute; left:2px; top:11px; width:8px; height:8px; border-radius:2px; background:currentColor; opacity:.55}
 .gr-card li b{font-weight:600}
 .gr-card .gc-count{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted)}
-.gr-note{margin-top:16px; font-size:13px; color:var(--muted); border-left:4px solid var(--wet2); padding:10px 14px; background:var(--panel); border-radius:0 8px 8px 0; border-top:1px solid var(--line); border-right:1px solid var(--line); border-bottom:1px solid var(--line)}
 
 /* Calendario operativo */
 .cal-wrap{margin-top:20px}
@@ -178,6 +183,7 @@ footer code{font-family:'IBM Plex Mono',monospace; background:var(--panel); bord
   <div class="nav-inner">
     <button class="tab active" data-tab="mapa">Mapa</button>
     <button class="tab" data-tab="cuadrante">Cuadrante anomalía × IDS</button>
+    <button class="tab" data-tab="tejido">Tejido productivo</button>
     <button class="tab" data-tab="analisis">Análisis</button>
     <button class="tab" data-tab="gestion">Gestión del riesgo</button>
   </div>
@@ -240,6 +246,30 @@ footer code{font-family:'IBM Plex Mono',monospace; background:var(--panel); bord
   </div>
 </section>
 
+<!-- ============ TEJIDO PRODUCTIVO ============ -->
+<section id="sec-tejido">
+  <div class="controls">
+    <div class="ctrl"><label for="selSecc">Sección CIIU (Rev. 4)</label>
+      <select id="selSecc" style="max-width:340px"></select>
+    </div>
+    <div class="ctrl"><label>Periodo de la anomalía — clic en un mes</label><div class="per-row" data-perrow></div></div>
+  </div>
+  <div class="quad-grid">
+    <div class="card" style="position:relative">
+      <div class="prov-legend" id="tejLegend"></div>
+      <div id="tejChart"></div>
+      <div class="q-tip" id="tTip"></div>
+      <div class="tej-caption" id="tejCaption"></div>
+    </div>
+    <div class="card detail">
+      <h3 style="font-size:15px; margin-bottom:2px" id="tejTitle">Sección</h3>
+      <p style="font-size:12px; color:var(--muted)" id="tejStats"></p>
+      <table class="rank" id="tejTable"></table>
+      <div class="caveat"><b>Lectura con cuidado:</b> el registro corresponde a <b>unidades jurídicas grandes</b> (tamaño 4) del año 2024, ubicadas por <b>domicilio legal</b>: parte del empleo agro aparece en cantones sede (Escazú, Santa Ana, San José) aunque la producción esté en otra parte. Monteverde y Puerto Jiménez se reasignaron a Puntarenas y Golfito por la delimitación del shapefile. La anomalía cantonal es el promedio distrital ponderado por área.</div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ ANÁLISIS ============ -->
 <section id="sec-analisis">
   <div class="card" style="margin-bottom:2px">
@@ -289,6 +319,7 @@ footer code{font-family:'IBM Plex Mono',monospace; background:var(--panel); bord
       <li><b>Índice de prioridad combinado — para qué sirve:</b> es una herramienta de <b>focalización y secuenciación</b>. Responde una pregunta operativa: si los recursos alcanzan para atender N distritos, ¿por cuáles empezar? Ordena los territorios donde coinciden las dos condiciones que justifican intervención pública subsidiada —mayor severidad de la sequía y menor capacidad social de respuesta—, de modo que un distrito muy seco pero desarrollado (que puede gestionar por mercado) o uno rezagado pero poco expuesto no desplacen a los que tienen ambos problemas a la vez. Por construir el orden con una regla explícita y replicable, cualquier tercero puede verificar por qué un distrito entró antes que otro, lo que lo hace útil para presupuestación, convenios y auditoría ciudadana.</li>
       <li><b>Índice de prioridad combinado — cómo leerlo y sus límites:</b> valores cercanos a 0 indican un distrito promedio en ambas dimensiones; valores altos (por ejemplo > 1), coincidencia de sequedad y rezago muy por encima del promedio; valores negativos, distritos menos expuestos o más desarrollados que la media. Es un ordenador de tamizaje, no un índice normativo: no mide riesgo absoluto ni daño esperado (no incorpora población, actividad económica ni infraestructura expuesta), no sustituye la verificación en campo y no aplica a la agenda de exceso hídrico (zonas E), donde la prioridad debe construirse con la lógica de inundación, no de sequedad.</li>
       <li><b>Población distrital:</b> población total por distrito incorporada mediante la llave común (483 distritos, 5 028 450 habitantes en total). En el cuadrante puede activarse el escalado de puntos por población: el área del círculo es proporcional a los habitantes (escala de raíz cuadrada), de modo que la lectura pase de "cuántos distritos" a "cuánta gente". Los conteos por zona y las tarjetas de gestión reportan también la población de cada zona.</li>
+      <li><b>Tejido productivo cantonal:</b> unidades jurídicas <b>grandes</b> (tamaño 4) por sección CIIU Rev. 4 y cantón, año 2024, con su número de trabajadores. El eje horizontal es el porcentaje de UJ grandes del cantón que pertenece a la sección elegida; el área de cada punto es proporcional a los trabajadores de esa sección en el cantón. La anomalía cantonal es el promedio de las anomalías distritales ponderado por el área (km²) de cada distrito. Las unidades se ubican por domicilio legal, por lo que cantones sede (Escazú, Santa Ana, San José) concentran planillas cuya operación está en otros territorios; Monteverde y Puerto Jiménez se reasignaron a Puntarenas y Golfito por la delimitación del shapefile, y las UJ sin cantón identificado (código 999) se excluyeron.</li>
       <li><b>Emparejamiento:</b> llave común de 5 dígitos (provincia-cantón-distrito); 483 de 484 distritos emparejados.</li>
     </ul>
   </div>
@@ -361,13 +392,12 @@ footer code{font-family:'IBM Plex Mono',monospace; background:var(--panel); bord
     <div class="cal-strip" id="calStrip"></div>
   </div>
 
-  <div class="gr-note"><b>Gobernanza y financiamiento.</b> El portafolio se ancla en la Ley 8488 (CNE y Fondo Nacional de Emergencias), los Comités Municipales de Emergencia y la Política Nacional de Gestión del Riesgo. La dimensión temporal importa: contratar seguros y llenar reservorios en octubre–noviembre cuesta una fracción de responder en marzo. Con los umbrales en las medianas, los distritos Q1 concentran la población objetivo de instrumentos subsidiados, mientras Q2/Q4 se gestionan con regulación y mercado. El índice de prioridad combinado ofrece un orden de entrada verificable para auditoría ciudadana.</div>
 </section>
 
 </main>
 
 <footer>
-  <p><b>Fuentes:</b> anomalías mensuales de precipitación (PCP01–PCP12) del <b>Visor de El Niño Oscilación del Sur (ENOS) del Instituto Meteorológico Nacional</b> — <a href="https://enos.imn.ac.cr/" target="_blank" rel="noopener">https://enos.imn.ac.cr/</a> · Índice de Desarrollo Social 2023, MIDEPLAN · población total distrital · límites distritales IGN/DTA. Isla del Coco excluida (sin IDS).</p>
+  <p><b>Fuentes:</b> anomalías mensuales de precipitación (PCP01–PCP12) del <b>Visor de El Niño Oscilación del Sur (ENOS) del Instituto Meteorológico Nacional</b> — <a href="https://enos.imn.ac.cr/" target="_blank" rel="noopener">https://enos.imn.ac.cr/</a> · Índice de Desarrollo Social 2023, MIDEPLAN · población total distrital · unidades jurídicas grandes por sección CIIU y cantón, 2024 · límites distritales IGN/DTA. Isla del Coco excluida (sin IDS).</p>
   <p style="margin-top:8px"><b>Autoría:</b> plataforma elaborada por <b>INCAE / CLACDS-JGG</b>.</p>
   <p style="margin-top:8px"><b>Actualización de datos:</b> los datos viven en una sola constante <code>GEO</code> al final del archivo (GeoJSON; propiedad <code>a12</code> = arreglo de 12 anomalías mensuales en %, <code>ids</code>, <code>d</code> = dimensiones del IDS, <code>pob</code> = población total). Para actualizar, reemplace ese bloque: promedios, medianas, desviaciones, KPIs, correlaciones, cuadrantes, rankings y calendario se recalculan automáticamente en el navegador.</p>
 </footer>
@@ -538,6 +568,7 @@ function showTab(id){
   document.querySelectorAll('main section').forEach(s=>s.classList.toggle('active', s.id==='sec-'+id));
   if(id==='mapa' && map){ setTimeout(()=>map.invalidateSize(),60); }
   if(id==='cuadrante'){ drawQuad(); }
+  if(id==='tejido'){ drawTejido(); }
   if(id==='analisis'){ drawSeason(); }
 }
 tabs.forEach(t=>t.addEventListener('click',()=>showTab(t.dataset.tab)));
@@ -624,6 +655,7 @@ function setPeriodo(v, keepThr){
   if(!keepThr) thrA = medOfPer();
   syncRngA(); computeRisk(); refreshKpiQ1(); updateGRCounts(); restyle();
   if(document.getElementById('sec-cuadrante').classList.contains('active')) drawQuad();
+  if(document.getElementById('sec-tejido').classList.contains('active')) drawTejido();
   const p = selKey? P.find(x=>x.k===selKey) : null; renderDetail(p);
 }
 
@@ -879,6 +911,112 @@ function drawSeason(){
     </div>`).join('');
 })();
 
+/* ================== Tejido productivo (cantonal) ================== */
+const CANT = [{"c":"610","n":"Corredores","p":"Puntarenas","km2":623.7,"pob":51023,"a12":[-58.7,1.6,-5.2,-10.2,26.1,-24.6,-10.2,-30.7,-38.7,-3.1,-19.1,-26.1],"u":{"A":1,"C":2,"F":1,"G":1,"H":1,"O":1},"t":{"A":0,"C":0,"F":0,"G":0,"H":0,"O":0},"uT":7,"tT":0},{"c":"607","n":"Golfito","p":"Puntarenas","km2":1749.5,"pob":44086,"a12":[-50.1,-28.6,-18.5,-2.4,5.1,-29.7,-25.1,-30.7,-28.7,3.1,-15.2,-41.6],"u":{"C":1,"G":4,"H":1,"I":3,"L":1,"M":1,"N":1,"O":1,"S":1},"t":{"C":0,"G":0,"H":0,"I":0,"L":0,"M":0,"N":0,"O":0,"S":0},"uT":14,"tT":0},{"c":"608","n":"Coto Brus","p":"Puntarenas","km2":944.2,"pob":46351,"a12":[-32.0,-10.9,-5.5,-18.9,-5.8,-19.6,-15.4,-26.7,-6.8,0.9,-18.1,-20.1],"u":{"C":3,"F":1,"G":4,"O":1,"S":2},"t":{"C":0,"F":0,"G":152,"O":0,"S":0},"uT":11,"tT":152},{"c":"605","n":"Osa","p":"Puntarenas","km2":1922.6,"pob":36088,"a12":[-56.4,-48.6,-16.5,-4.0,-22.6,-35.1,-40.0,-20.9,-17.6,-1.7,-10.2,-61.3],"u":{"F":1,"G":5,"I":1,"N":1,"O":1},"t":{"F":0,"G":309,"I":0,"N":0,"O":0},"uT":9,"tT":309},{"c":"603","n":"Buenos Aires","p":"Puntarenas","km2":2382.9,"pob":50562,"a12":[-25.5,-14.3,-1.9,-21.4,-16.1,-16.0,-16.8,-20.7,-9.6,-3.5,-10.5,-11.2],"u":{"A":1,"F":1,"G":2,"K":1,"O":1,"Q":1},"t":{"A":0,"F":0,"G":0,"K":0,"O":0,"Q":0},"uT":7,"tT":0},{"c":"119","n":"Pérez Zeledón","p":"San José","km2":1901.1,"pob":156917,"a12":[-41.2,-11.3,-14.0,-24.9,-29.8,-16.4,-11.3,-23.9,-16.2,-0.4,-18.3,-36.6],"u":{"A":1,"C":5,"F":7,"G":21,"H":1,"K":2,"M":2,"N":1,"O":1,"P":2,"Q":2,"S":4},"t":{"A":0,"C":1803,"F":707,"G":1682,"H":0,"K":0,"M":0,"N":0,"O":0,"P":0,"Q":0,"S":2303},"uT":49,"tT":6495},{"c":"606","n":"Quepos","p":"Puntarenas","km2":558.8,"pob":32416,"a12":[-47.7,-20.7,-0.3,-33.8,-35.0,-21.8,-19.7,-14.3,-18.1,5.3,-31.9,-43.0],"u":{"C":2,"F":1,"G":2,"I":8,"L":1,"M":1,"N":2,"O":1,"R":1},"t":{"C":0,"F":0,"G":0,"I":796,"L":0,"M":0,"N":0,"O":0,"R":0},"uT":19,"tT":796},{"c":"704","n":"Talamanca","p":"Limón","km2":2814.7,"pob":48906,"a12":[-18.2,8.4,0.0,-22.6,28.5,6.4,6.9,20.0,-1.3,-0.4,2.3,-8.4],"u":{"A":2,"G":4,"I":2,"O":1},"t":{"A":0,"G":155,"I":0,"O":0},"uT":9,"tT":155},{"c":"609","n":"Parrita","p":"Puntarenas","km2":479.4,"pob":20068,"a12":[-64.6,30.8,17.7,-38.9,-52.2,-35.7,-21.6,-8.6,-38.5,7.3,-31.7,-32.2],"u":{"A":3,"C":1,"I":1,"N":2,"O":1,"nd":1},"t":{"A":0,"C":0,"I":0,"N":0,"O":0,"nd":0},"uT":9,"tT":0},{"c":"105","n":"Tarrazú","p":"San José","km2":290.4,"pob":17810,"a12":[-58.2,-9.5,25.5,-37.2,-21.7,-15.7,-26.9,-9.2,-12.3,2.5,-24.6,-13.7],"u":{"C":2,"D":1,"O":1},"t":{"C":0,"D":0,"O":0},"uT":4,"tT":0},{"c":"117","n":"Dota","p":"San José","km2":405.5,"pob":9364,"a12":[-51.4,-22.7,26.8,-28.6,-19.7,-6.0,-9.6,-9.1,-1.7,5.5,-20.0,-9.1],"u":{"C":1,"O":1},"t":{"C":0,"O":0},"uT":2,"tT":0},{"c":"611","n":"Garabito","p":"Puntarenas","km2":315.0,"pob":26672,"a12":[-79.7,5.1,-34.6,-26.4,-45.2,-43.3,-44.2,-9.3,-27.7,6.0,-11.8,-12.1],"u":{"C":1,"F":2,"G":1,"I":2,"L":2,"N":2,"O":1,"P":1,"R":2},"t":{"C":0,"F":0,"G":0,"I":0,"L":0,"N":0,"O":0,"P":0,"R":0},"uT":14,"tT":0},{"c":"120","n":"León Cortés Castro","p":"San José","km2":121.9,"pob":13553,"a12":[-60.1,12.5,4.2,-50.8,-18.8,-20.4,-30.9,-15.3,-17.6,-8.8,-13.0,-19.4],"u":{"G":1,"S":1},"t":{"G":0,"S":0},"uT":2,"tT":0},{"c":"104","n":"Puriscal","p":"San José","km2":555.0,"pob":38525,"a12":[-69.7,13.7,-1.5,-27.7,-40.2,-40.1,-20.4,-10.8,-25.6,6.1,-23.9,-28.1],"u":{"F":2,"G":5,"K":1,"N":2,"O":1,"S":1},"t":{"F":0,"G":429,"K":0,"N":0,"O":0,"S":0},"uT":12,"tT":429},{"c":"106","n":"Aserrí","p":"San José","km2":168.3,"pob":59588,"a12":[-58.4,59.2,-14.3,-48.0,-11.7,-25.9,-13.4,-19.3,-25.6,-0.5,-19.2,-4.0],"u":{"G":2,"N":1,"O":1},"t":{"G":0,"N":0,"O":0},"uT":4,"tT":0},{"c":"103","n":"Desamparados","p":"San José","km2":118.8,"pob":223226,"a12":[-48.8,25.4,-40.0,-53.2,-18.6,-27.6,-9.8,-27.1,-24.9,-14.3,-1.1,-22.6],"u":{"A":1,"C":3,"E":1,"F":7,"G":24,"H":5,"I":1,"J":1,"K":1,"L":1,"M":4,"N":6,"P":2,"Q":1,"S":4},"t":{"A":0,"C":0,"E":0,"F":473,"G":3980,"H":546,"I":0,"J":0,"K":0,"L":0,"M":309,"N":656,"P":0,"Q":0,"S":782},"uT":62,"tT":6746},{"c":"112","n":"Acosta","p":"San José","km2":342.5,"pob":22542,"a12":[-59.0,52.7,-1.7,-32.8,-18.8,-31.9,-11.0,-17.3,-26.0,4.9,-26.4,-21.0],"u":{"H":1,"S":2},"t":{"H":0,"S":0},"uT":3,"tT":0},{"c":"116","n":"Turrubares","p":"San José","km2":416.3,"pob":6173,"a12":[-79.8,0.3,-29.6,-33.1,-40.0,-42.6,-33.7,-9.6,-24.9,8.5,-21.5,-5.5],"u":{},"t":{},"uT":0,"tT":0},{"c":"308","n":"El Guarco","p":"Cartago","km2":172.0,"pob":47375,"a12":[-42.9,-23.3,-19.7,-33.5,-15.5,-22.5,-1.3,-16.6,-10.0,-7.4,1.2,-25.8],"u":{"A":1,"C":12,"E":1,"F":5,"G":5,"H":2,"M":1,"N":2,"O":1,"P":1,"Q":1,"S":1},"t":{"A":0,"C":2971,"E":0,"F":425,"G":485,"H":0,"M":0,"N":0,"O":0,"P":0,"Q":0,"S":0},"uT":33,"tT":3881},{"c":"301","n":"Cartago","p":"Cartago","km2":278.6,"pob":165417,"a12":[-47.7,-6.4,-42.0,-38.8,-15.5,-24.9,3.2,-24.6,-18.6,-8.3,-8.8,-29.5],"u":{"A":5,"C":32,"D":1,"E":2,"F":5,"G":37,"H":6,"I":1,"J":1,"K":3,"L":1,"M":4,"N":5,"O":2,"P":9,"Q":4,"R":1,"S":5,"nd":1},"t":{"A":1653,"C":12884,"D":0,"E":0,"F":419,"G":4899,"H":479,"I":0,"J":0,"K":0,"L":0,"M":408,"N":573,"O":0,"P":3747,"Q":262,"R":0,"S":806,"nd":0},"uT":125,"tT":26130},{"c":"601","n":"Puntarenas","p":"Puntarenas","km2":1813.8,"pob":141697,"a12":[-61.1,-42.3,-54.5,-40.5,-16.1,-22.0,-24.9,-20.8,-21.8,-1.1,8.2,-5.2],"u":{"A":1,"C":4,"E":1,"F":3,"G":11,"H":7,"I":13,"K":2,"N":3,"O":2,"P":1,"R":1,"S":1,"nd":2},"t":{"A":0,"C":666,"E":0,"F":0,"G":723,"H":626,"I":1672,"K":0,"N":0,"O":0,"P":0,"R":0,"S":0,"nd":0},"uT":52,"tT":3687},{"c":"302","n":"Paraíso","p":"Cartago","km2":476.9,"pob":65941,"a12":[-39.7,15.8,-24.4,-31.2,-13.7,-4.5,3.8,-24.2,-9.8,0.0,-10.8,-13.8],"u":{"A":2,"C":3,"F":3,"G":6,"H":2,"N":2,"O":1,"S":2},"t":{"A":0,"C":0,"F":0,"G":2427,"H":0,"N":0,"O":0,"S":0},"uT":21,"tT":2427},{"c":"304","n":"Jiménez","p":"Cartago","km2":250.1,"pob":18710,"a12":[-44.3,26.4,-37.5,-31.3,-11.5,-1.0,-0.6,-25.0,-6.0,4.8,-11.5,-14.2],"u":{"A":1,"C":1,"O":1},"t":{"A":0,"C":0,"O":0},"uT":3,"tT":0},{"c":"305","n":"Turrialba","p":"Cartago","km2":1589.3,"pob":82065,"a12":[-36.0,53.6,-26.9,-35.2,17.0,-2.4,8.7,-20.5,-0.1,8.4,-10.1,-1.2],"u":{"A":1,"C":2,"D":1,"F":2,"G":4,"H":1,"N":1,"O":1,"P":2},"t":{"A":0,"C":0,"D":0,"F":0,"G":338,"H":0,"N":0,"O":0,"P":0},"uT":15,"tT":338},{"c":"107","n":"Mora","p":"San José","km2":163.5,"pob":32348,"a12":[-54.4,21.5,-23.8,-9.0,-14.2,-25.6,6.1,-20.1,-13.2,1.9,-18.4,-52.3],"u":{"A":1,"C":1,"E":1,"F":2,"G":6,"I":1,"O":1,"P":1},"t":{"A":0,"C":0,"E":0,"F":0,"G":497,"I":0,"O":0,"P":0},"uT":14,"tT":497},{"c":"307","n":"Oreamuno","p":"Cartago","km2":203.0,"pob":48911,"a12":[-37.7,40.2,-25.7,-38.6,-13.9,-9.5,3.3,-23.7,-17.9,-9.1,-22.6,-27.2],"u":{"A":1,"C":2,"F":3,"G":4,"M":1,"O":1},"t":{"A":0,"C":0,"F":0,"G":257,"M":0,"O":0},"uT":12,"tT":257},{"c":"110","n":"Alajuelita","p":"San José","km2":21.4,"pob":81012,"a12":[-33.4,60.4,-29.5,-37.9,-21.3,-31.1,-8.9,-43.3,-29.9,-5.7,-1.9,-19.1],"u":{"F":2,"G":2,"M":2,"O":1,"P":1,"S":1},"t":{"F":0,"G":0,"M":0,"O":0,"P":0,"S":0},"uT":9,"tT":0},{"c":"701","n":"Limón","p":"Limón","km2":1769.3,"pob":116457,"a12":[-26.7,31.6,-1.2,-15.3,53.2,20.9,25.8,30.2,6.5,18.2,1.5,0.1],"u":{"A":1,"C":1,"F":1,"G":7,"H":13,"N":3,"O":1,"P":3,"S":3},"t":{"A":0,"C":0,"F":0,"G":308,"H":1301,"N":0,"O":0,"P":0,"S":0},"uT":33,"tT":1609},{"c":"303","n":"La Unión","p":"Cartago","km2":44.3,"pob":99539,"a12":[-53.4,7.8,-72.7,-48.7,-16.8,-43.7,15.9,-30.0,-24.0,-17.2,-11.4,-40.4],"u":{"A":4,"C":4,"F":10,"G":10,"H":4,"I":2,"J":5,"L":1,"M":2,"N":8,"O":2,"P":7,"Q":1,"R":1},"t":{"A":1907,"C":1305,"F":826,"G":652,"H":566,"I":0,"J":656,"L":0,"M":0,"N":1426,"O":0,"P":653,"Q":0,"R":0},"uT":61,"tT":7991},{"c":"118","n":"Curridabat","p":"San José","km2":16.1,"pob":71026,"a12":[-41.1,37.0,-55.5,-41.5,-25.9,-36.8,8.3,-40.0,-33.2,-18.9,-1.8,-22.0],"u":{"A":1,"C":17,"E":1,"F":10,"G":33,"H":4,"I":7,"J":7,"L":3,"M":11,"N":13,"O":2,"P":8,"Q":1,"R":1,"S":4,"nd":1},"t":{"A":0,"C":2265,"E":0,"F":1930,"G":3576,"H":439,"I":454,"J":1303,"L":0,"M":2193,"N":2129,"O":0,"P":1098,"Q":0,"R":0,"S":514,"nd":0},"uT":124,"tT":15901},{"c":"209","n":"Orotina","p":"Alajuela","km2":145.2,"pob":24217,"a12":[-82.3,12.8,-73.3,-35.2,-32.8,-40.8,-42.8,-13.8,-22.5,12.8,-17.8,22.2],"u":{"A":1,"C":1,"F":1,"I":2,"O":1,"S":1},"t":{"A":0,"C":0,"F":0,"I":0,"O":0,"S":0},"uT":7,"tT":0},{"c":"101","n":"San José","p":"San José","km2":44.7,"pob":352381,"a12":[-59.1,60.6,-60.6,-42.8,-28.6,-24.5,-6.1,-43.1,-30.5,-14.8,0.3,-13.3],"u":{"A":12,"B":1,"C":56,"D":4,"E":3,"F":64,"G":290,"H":72,"I":37,"J":36,"K":74,"L":13,"M":71,"N":129,"O":49,"P":32,"Q":24,"R":21,"S":33,"U":2,"nd":3},"t":{"A":5455,"B":0,"C":18894,"D":16256,"E":0,"F":9916,"G":38388,"H":8755,"I":6568,"J":10649,"K":28043,"L":786,"M":7954,"N":42732,"O":63220,"P":113359,"Q":80533,"R":2738,"S":10766,"U":0,"nd":0},"uT":1026,"tT":465012},{"c":"102","n":"Escazú","p":"San José","km2":34.5,"pob":71500,"a12":[-41.2,31.6,-37.4,-34.9,-15.0,-26.1,-8.0,-38.0,-22.7,-5.1,-6.1,-28.0],"u":{"A":6,"B":1,"C":8,"D":1,"E":1,"F":25,"G":79,"H":23,"I":21,"J":23,"K":27,"L":13,"M":31,"N":35,"O":3,"P":9,"Q":5,"R":3,"S":5,"nd":1},"t":{"A":9316,"B":0,"C":2033,"D":0,"E":0,"F":4253,"G":13318,"H":2373,"I":3786,"J":3908,"K":9516,"L":972,"M":6040,"N":7402,"O":0,"P":590,"Q":714,"R":0,"S":568,"nd":0},"uT":320,"tT":64789},{"c":"306","n":"Alvarado","p":"Cartago","km2":79.2,"pob":17134,"a12":[-63.8,2.2,-31.1,-32.4,-0.1,-0.0,-5.1,-17.2,-35.9,-3.4,-24.9,-38.5],"u":{"G":2,"N":1},"t":{"G":0,"N":0},"uT":3,"tT":0},{"c":"109","n":"Santa Ana","p":"San José","km2":61.2,"pob":58020,"a12":[-20.7,26.5,-41.7,-24.2,-5.6,-18.0,9.1,-30.7,-17.6,0.0,-10.4,-38.8],"u":{"A":5,"C":9,"F":15,"G":39,"H":3,"I":10,"J":12,"K":4,"L":6,"M":21,"N":23,"P":2,"Q":2,"R":2,"S":2,"nd":1},"t":{"A":7106,"C":5491,"F":817,"G":18008,"H":0,"I":2660,"J":1702,"K":553,"L":361,"M":6060,"N":4655,"P":0,"Q":0,"R":0,"S":0,"nd":0},"uT":156,"tT":47413},{"c":"509","n":"Nandayure","p":"Guanacaste","km2":567.7,"pob":11874,"a12":[-78.3,-12.3,-71.8,-41.5,-10.0,-25.9,-15.1,-9.2,-26.9,12.0,-5.9,41.3],"u":{"A":1,"I":1,"O":1},"t":{"A":0,"I":0,"O":0},"uT":3,"tT":0},{"c":"115","n":"Montes de Oca","p":"San José","km2":15.7,"pob":53862,"a12":[-34.1,42.3,-50.9,-37.4,-27.5,-37.8,6.4,-44.6,-33.2,-21.5,-3.0,-20.7],"u":{"A":4,"C":5,"F":7,"G":26,"H":7,"I":5,"J":10,"K":9,"L":1,"M":17,"N":15,"O":5,"P":12,"Q":3,"R":1,"S":7,"nd":2},"t":{"A":1200,"C":561,"F":1989,"G":1121,"H":426,"I":3763,"J":2288,"K":1907,"L":0,"M":2085,"N":4508,"O":1231,"P":18173,"Q":0,"R":0,"S":1410,"nd":0},"uT":136,"tT":40662},{"c":"108","n":"Goicoechea","p":"San José","km2":31.8,"pob":132104,"a12":[-34.4,38.1,-50.5,-39.6,-33.5,-36.0,8.0,-37.6,-31.6,-19.1,-8.2,-20.7],"u":{"A":1,"C":7,"E":1,"F":12,"G":30,"H":5,"I":2,"J":2,"K":6,"M":8,"N":9,"O":1,"P":3,"Q":5},"t":{"A":0,"C":2343,"E":0,"F":2812,"G":6671,"H":399,"I":0,"J":0,"K":886,"M":2163,"N":2456,"O":0,"P":0,"Q":1915},"uT":92,"tT":19645},{"c":"113","n":"Tibás","p":"San José","km2":8.3,"pob":74592,"a12":[-53.9,73.4,-47.8,-35.9,-39.3,-24.2,-0.2,-51.7,-39.0,-19.2,1.8,-0.5],"u":{"C":9,"F":7,"G":18,"H":4,"I":1,"J":2,"K":3,"M":3,"N":12,"P":3,"Q":1,"R":2,"S":5},"t":{"C":1803,"F":676,"G":2699,"H":357,"I":0,"J":0,"K":0,"M":0,"N":4392,"P":0,"Q":0,"R":0,"S":12088},"uT":70,"tT":22015},{"c":"204","n":"San Mateo","p":"Alajuela","km2":125.1,"pob":6952,"a12":[-71.1,-8.7,-74.6,-45.0,-20.9,-29.8,-29.2,-20.1,-18.6,15.1,-17.9,29.2],"u":{"H":1},"t":{"H":0},"uT":1,"tT":0},{"c":"502","n":"Nicoya","p":"Guanacaste","km2":1334.5,"pob":66268,"a12":[-72.5,-16.0,-40.6,-40.3,-34.9,-19.7,-11.6,-25.4,-24.4,5.7,-20.6,-50.0],"u":{"F":3,"G":4,"I":8,"L":1,"M":1,"N":2,"O":1,"P":1,"Q":1,"nd":1},"t":{"F":0,"G":172,"I":707,"L":0,"M":0,"N":0,"O":0,"P":0,"Q":0,"nd":0},"uT":23,"tT":879},{"c":"205","n":"Atenas","p":"Alajuela","km2":126.4,"pob":30407,"a12":[-81.6,-70.4,-60.7,-53.1,-1.7,-20.3,-22.3,-15.4,-14.6,-7.9,-16.6,-1.0],"u":{"F":2,"G":5,"H":2,"I":2,"O":1,"P":2},"t":{"F":0,"G":579,"H":0,"I":0,"O":0,"P":0},"uT":14,"tT":579},{"c":"201","n":"Alajuela","p":"Alajuela","km2":391.7,"pob":322143,"a12":[-27.3,20.6,-28.7,-32.4,-11.5,-13.1,-4.3,-20.3,-10.7,-13.3,-14.4,-26.4],"u":{"A":10,"C":69,"D":1,"E":3,"F":20,"G":84,"H":47,"I":13,"J":5,"K":6,"L":9,"M":16,"N":29,"O":1,"P":16,"Q":1,"R":3,"S":10,"nd":2},"t":{"A":1359,"C":49292,"D":0,"E":0,"F":1995,"G":11980,"H":5564,"I":3449,"J":737,"K":1269,"L":964,"M":875,"N":3923,"O":0,"P":3435,"Q":0,"R":0,"S":1376,"nd":0},"uT":345,"tT":86218},{"c":"114","n":"Moravia","p":"San José","km2":28.8,"pob":59546,"a12":[-8.0,50.4,1.2,-15.6,-51.4,-22.6,19.4,-53.6,-51.5,-22.1,2.3,9.7],"u":{"A":2,"C":3,"F":1,"G":6,"H":2,"I":1,"N":1,"O":2,"P":6,"S":2},"t":{"A":0,"C":0,"F":0,"G":399,"H":0,"I":0,"N":0,"O":0,"P":869,"S":0},"uT":26,"tT":1268},{"c":"602","n":"Esparza","p":"Puntarenas","km2":217.2,"pob":34808,"a12":[-47.4,-15.7,-55.9,-39.7,-42.5,-19.7,-41.3,-28.0,-25.5,-1.9,16.2,12.0],"u":{"A":1,"C":2,"G":4,"H":4,"I":1,"K":1,"M":1,"O":2,"P":1,"Q":1},"t":{"A":0,"C":0,"G":152,"H":445,"I":0,"K":0,"M":0,"O":0,"P":0,"Q":0},"uT":18,"tT":597},{"c":"111","n":"Vázquez de Coronado","p":"San José","km2":223.9,"pob":67078,"a12":[-15.8,53.3,-16.8,-30.8,-35.6,-18.2,9.9,-33.2,-21.1,-14.3,-9.3,-10.0],"u":{"F":3,"G":4,"H":2,"M":1,"O":1,"P":4,"Q":1,"S":1,"U":1},"t":{"F":0,"G":275,"H":0,"M":0,"O":0,"P":347,"Q":0,"S":0,"U":0},"uT":18,"tT":622},{"c":"403","n":"Santo Domingo","p":"Heredia","km2":25.5,"pob":45932,"a12":[-35.7,56.1,-22.4,-23.5,-49.8,-21.9,12.9,-55.6,-48.4,-21.0,2.0,10.5],"u":{"C":9,"F":7,"G":22,"H":3,"I":1,"J":1,"M":4,"N":5,"P":5,"S":2},"t":{"C":2577,"F":1065,"G":2613,"H":0,"I":0,"J":0,"M":710,"N":4745,"P":737,"S":0},"uT":59,"tT":12447},{"c":"407","n":"Belén","p":"Heredia","km2":12.5,"pob":23759,"a12":[-24.8,17.5,-66.9,-40.1,-19.7,-8.8,12.5,-23.7,-15.8,-12.6,10.9,-2.1],"u":{"C":16,"F":8,"G":17,"H":9,"I":6,"J":3,"L":1,"M":9,"N":10,"O":1,"P":4,"Q":1,"R":1},"t":{"C":8163,"F":990,"G":1459,"H":639,"I":493,"J":0,"L":0,"M":7539,"N":9231,"O":0,"P":389,"Q":0,"R":0},"uT":86,"tT":28903},{"c":"401","n":"Heredia","p":"Heredia","km2":283.0,"pob":131901,"a12":[-5.9,39.4,-6.7,-22.1,-24.1,-2.2,4.5,-30.9,-4.3,-14.9,-12.4,-8.2],"u":{"A":1,"C":29,"D":1,"E":1,"F":6,"G":48,"H":23,"I":5,"J":21,"K":3,"L":5,"M":23,"N":40,"O":4,"P":6,"Q":2,"R":4,"nd":1},"t":{"A":0,"C":12785,"D":0,"E":0,"F":284,"G":4453,"H":4029,"I":2186,"J":11058,"K":0,"L":478,"M":22446,"N":20718,"O":1228,"P":4047,"Q":0,"R":438,"nd":0},"uT":223,"tT":84150},{"c":"409","n":"San Pablo","p":"Heredia","km2":8.3,"pob":29860,"a12":[-62.4,42.2,-52.1,-35.0,-43.3,-19.2,7.1,-49.3,-25.9,-16.1,-6.5,4.4],"u":{"C":3,"F":1,"G":2,"H":1,"J":2,"L":1,"N":2,"P":1},"t":{"C":0,"F":0,"G":0,"H":0,"J":0,"L":0,"N":0,"P":0},"uT":13,"tT":0},{"c":"202","n":"San Ramón","p":"Alajuela","km2":1021.7,"pob":93264,"a12":[-33.6,-12.3,7.1,-46.5,-30.2,-17.1,-9.0,-17.6,-18.3,-7.8,-3.0,-29.3],"u":{"A":1,"C":3,"F":2,"G":20,"H":1,"I":2,"M":1,"N":4,"O":1,"P":1,"Q":1,"R":1,"S":1,"nd":1},"t":{"A":0,"C":0,"F":0,"G":1343,"H":0,"I":0,"M":0,"N":655,"O":0,"P":0,"Q":0,"R":0,"S":0,"nd":0},"uT":40,"tT":1998},{"c":"511","n":"Hojancha","p":"Guanacaste","km2":262.8,"pob":8224,"a12":[-98.8,-17.1,-39.2,-67.1,-10.8,-22.6,-2.2,-5.8,-30.7,19.8,-21.1,46.4],"u":{"F":1,"G":1,"I":1},"t":{"F":0,"G":0,"I":0},"uT":3,"tT":0},{"c":"408","n":"Flores","p":"Heredia","km2":6.7,"pob":22026,"a12":[-56.7,-11.2,-82.8,-33.4,-25.2,-20.4,22.9,-27.9,-13.3,-12.7,4.6,9.6],"u":{"A":1,"C":2,"F":1,"G":7,"H":4,"J":1,"K":1,"L":1,"M":2,"N":1,"O":1,"P":1,"Q":1},"t":{"A":0,"C":0,"F":0,"G":1441,"H":371,"J":0,"K":0,"L":0,"M":0,"N":0,"O":0,"P":0,"Q":0},"uT":24,"tT":1812},{"c":"405","n":"San Rafael","p":"Heredia","km2":48.4,"pob":48848,"a12":[-32.8,23.4,-21.9,-25.1,-45.8,-14.8,14.5,-49.5,-23.0,-15.3,-11.7,4.1],"u":{"F":1,"G":2,"H":1,"O":1,"P":1,"R":1},"t":{"F":0,"G":0,"H":0,"O":0,"P":0,"R":0},"uT":7,"tT":0},{"c":"402","n":"Barva","p":"Heredia","km2":56.0,"pob":47699,"a12":[-32.6,12.4,-34.5,-31.2,-33.1,-14.0,6.1,-43.0,-9.2,-13.6,-15.9,-8.7],"u":{"C":1,"F":3,"N":2,"O":3,"P":1,"Q":2},"t":{"C":0,"F":0,"N":0,"O":0,"P":0,"Q":0},"uT":12,"tT":0},{"c":"406","n":"San Isidro","p":"Heredia","km2":26.8,"pob":22806,"a12":[-9.3,42.1,9.3,-11.3,-57.5,-17.6,23.7,-57.0,-52.6,-21.0,0.7,17.5],"u":{"F":1,"G":2,"H":3,"N":1,"P":1},"t":{"F":0,"G":0,"H":0,"N":0,"P":0},"uT":8,"tT":0},{"c":"404","n":"Santa Bárbara","p":"Heredia","km2":52.2,"pob":39133,"a12":[-23.1,13.9,-39.0,-34.4,-25.3,-16.3,0.1,-40.0,-11.9,-14.7,-11.9,-16.1],"u":{"A":1,"F":2,"G":5,"I":1,"N":1,"O":1,"P":1},"t":{"A":0,"F":0,"G":964,"I":0,"N":0,"O":0,"P":0},"uT":12,"tT":964},{"c":"207","n":"Palmares","p":"Alajuela","km2":38.9,"pob":39148,"a12":[-63.6,-53.0,-76.0,-48.8,-1.3,-19.0,-14.3,-20.5,-15.2,6.2,-21.2,-20.2],"u":{"C":3,"F":4,"G":13,"H":1,"I":1,"K":1,"P":1},"t":{"C":0,"F":516,"G":1672,"H":0,"I":0,"K":0,"P":0},"uT":24,"tT":2188},{"c":"208","n":"Poás","p":"Alajuela","km2":74.5,"pob":36207,"a12":[-27.4,29.5,-42.7,-33.0,-12.7,-12.7,-9.1,-27.7,-16.4,-14.6,-5.6,-13.3],"u":{"C":1,"F":2,"G":1,"H":1,"O":1},"t":{"C":0,"F":0,"G":0,"H":0,"O":0},"uT":6,"tT":0},{"c":"203","n":"Grecia","p":"Alajuela","km2":142.5,"pob":76226,"a12":[-48.5,6.4,-62.8,-38.8,-3.6,-13.0,-8.1,-16.6,-14.2,-7.8,3.0,-4.3],"u":{"A":1,"C":7,"F":4,"G":17,"H":3,"I":2,"J":1,"K":2,"M":2,"N":1,"O":1,"P":1,"Q":1},"t":{"A":0,"C":3131,"F":236,"G":1232,"H":0,"I":0,"J":0,"K":0,"M":0,"N":0,"O":0,"P":0,"Q":0},"uT":43,"tT":4599},{"c":"206","n":"Naranjo","p":"Alajuela","km2":126.9,"pob":46647,"a12":[-46.1,-8.4,-70.7,-38.0,-5.9,-11.8,-6.7,-14.1,-12.4,5.9,-14.7,-25.5],"u":{"A":1,"C":5,"F":5,"G":5,"H":2,"N":1,"O":1},"t":{"A":0,"C":772,"F":314,"G":371,"H":0,"N":0,"O":0},"uT":20,"tT":1457},{"c":"604","n":"Montes de Oro","p":"Puntarenas","km2":247.6,"pob":16395,"a12":[-50.0,-58.1,-41.0,-51.6,-50.4,-14.3,-15.9,-31.1,-20.1,-14.2,22.3,-15.6],"u":{"C":2,"G":1,"H":1,"M":1,"N":2,"O":1},"t":{"C":0,"G":0,"H":0,"M":0,"N":0,"O":0},"uT":8,"tT":0},{"c":"212","n":"Valverde Vega","p":"Alajuela","km2":136.7,"pob":21562,"a12":[-17.7,1.9,-47.7,-29.7,-7.1,4.0,-5.9,-4.8,-6.5,-9.5,-19.6,-17.7],"u":{"A":1,"C":1,"F":1,"G":1,"I":1,"O":1},"t":{"A":0,"C":0,"F":0,"G":0,"I":0,"O":0},"uT":6,"tT":0},{"c":"703","n":"Siquirres","p":"Limón","km2":855.1,"pob":59515,"a12":[-9.9,65.0,-25.7,-17.3,55.1,9.4,8.0,-3.4,4.1,21.0,-14.1,31.0],"u":{"A":8,"C":3,"F":1,"G":1,"H":2,"N":1,"O":1,"S":2},"t":{"A":1279,"C":0,"F":0,"G":0,"H":0,"N":0,"O":0,"S":0},"uT":19,"tT":1279},{"c":"705","n":"Matina","p":"Limón","km2":770.2,"pob":45329,"a12":[-13.8,63.3,-17.0,-12.1,65.5,16.4,20.9,4.7,32.0,28.4,-9.7,26.3],"u":{"A":6,"B":1,"F":1,"G":2},"t":{"A":1697,"B":0,"F":0,"G":0},"uT":10,"tT":1697},{"c":"503","n":"Santa Cruz","p":"Guanacaste","km2":1320.8,"pob":72366,"a12":[-81.3,-43.0,-43.4,-46.6,-27.8,-13.2,-7.9,-26.5,-30.9,-9.7,-9.6,-72.3],"u":{"D":1,"F":7,"G":6,"H":1,"I":15,"L":5,"N":3,"O":1,"P":3,"Q":1},"t":{"D":0,"F":1706,"G":407,"H":0,"I":1787,"L":477,"N":0,"O":0,"P":0,"Q":0},"uT":43,"tT":4377},{"c":"211","n":"Zarcero","p":"Alajuela","km2":157.4,"pob":15153,"a12":[-17.6,46.7,-5.3,-27.5,-28.4,-0.4,-0.6,-2.3,-5.8,0.9,-20.9,-26.2],"u":{"C":2,"D":1,"G":1,"K":1,"O":1},"t":{"C":0,"D":0,"G":0,"K":0,"O":0},"uT":6,"tT":0},{"c":"706","n":"Guácimo","p":"Limón","km2":581.1,"pob":49606,"a12":[-16.3,52.6,1.6,-28.5,38.7,15.2,19.1,9.4,-12.0,-4.7,-15.4,2.3],"u":{"A":2,"C":1,"G":4,"N":3},"t":{"A":0,"C":0,"G":780,"N":0},"uT":10,"tT":780},{"c":"507","n":"Abangares","p":"Guanacaste","km2":646.4,"pob":22211,"a12":[-29.2,-45.6,-26.7,-46.0,-19.6,-25.0,-28.3,-11.8,-37.8,5.9,0.4,-39.7],"u":{"A":1,"C":1,"F":1,"G":2,"H":1,"N":1,"O":1,"S":1},"t":{"A":0,"C":0,"F":0,"G":0,"H":0,"N":0,"O":0,"S":0},"uT":9,"tT":0},{"c":"702","n":"Pococí","p":"Limón","km2":2408.1,"pob":146320,"a12":[7.0,20.7,-2.3,-21.6,32.2,15.5,16.5,45.7,30.6,-4.7,-1.1,-17.7],"u":{"A":3,"C":3,"F":5,"G":15,"H":3,"I":3,"M":2,"N":6,"O":1,"P":2,"R":1,"S":1,"nd":2},"t":{"A":0,"C":0,"F":272,"G":1438,"H":0,"I":0,"M":0,"N":412,"O":0,"P":0,"R":0,"S":0,"nd":0},"uT":47,"tT":2122},{"c":"210","n":"San Carlos","p":"Alajuela","km2":3352.5,"pob":198742,"a12":[-36.7,-20.7,-11.0,-35.7,-0.9,5.6,7.4,3.8,-13.1,-12.7,-0.6,-35.4],"u":{"A":16,"C":7,"D":1,"F":6,"G":29,"H":6,"I":22,"K":1,"M":1,"N":10,"O":1,"P":2,"Q":1,"R":5,"S":3},"t":{"A":3447,"C":1224,"D":0,"F":582,"G":1807,"H":306,"I":3032,"K":0,"M":0,"N":813,"O":0,"P":0,"Q":0,"R":310,"S":0},"uT":111,"tT":11521},{"c":"506","n":"Cañas","p":"Guanacaste","km2":683.9,"pob":31738,"a12":[-49.0,-55.7,17.9,-58.2,-29.8,-30.6,-31.1,-10.2,-43.2,-0.2,-0.5,-50.8],"u":{"A":1,"C":4,"G":4,"K":1,"O":1},"t":{"A":0,"C":1098,"G":175,"K":0,"O":0},"uT":11,"tT":1273},{"c":"508","n":"Tilarán","p":"Guanacaste","km2":669.2,"pob":19591,"a12":[-68.6,-44.4,50.9,-54.6,-22.5,-20.1,-22.1,2.7,-34.2,-1.4,-4.3,-26.5],"u":{"A":1,"D":1,"O":1,"R":1,"S":1},"t":{"A":0,"D":0,"O":0,"R":0,"S":0},"uT":5,"tT":0},{"c":"410","n":"Sarapiquí","p":"Heredia","km2":2144.3,"pob":67153,"a12":[-9.9,6.7,0.6,-21.6,25.4,18.4,21.6,23.3,12.0,-9.8,0.5,-18.1],"u":{"A":2,"C":1,"G":2,"H":1,"N":3,"O":1,"S":1},"t":{"A":0,"C":0,"G":0,"H":0,"N":0,"O":0,"S":0},"uT":11,"tT":0},{"c":"505","n":"Carrillo","p":"Guanacaste","km2":598.6,"pob":48227,"a12":[-76.6,-46.5,-57.5,-35.3,-9.5,-26.2,-12.6,-28.5,-32.6,-6.6,-13.0,-49.2],"u":{"A":1,"C":1,"F":4,"G":5,"H":1,"I":5,"L":2,"M":2,"N":2,"O":1,"P":1,"R":1},"t":{"A":0,"C":0,"F":0,"G":688,"H":0,"I":1546,"L":0,"M":0,"N":0,"O":0,"P":0,"R":0},"uT":26,"tT":2234},{"c":"216","n":"Río Cuarto","p":"Alajuela","km2":254.9,"pob":4562,"a12":[-18.2,20.6,-13.6,-26.6,13.2,7.3,3.2,9.8,-5.8,-14.1,-13.6,-18.3],"u":{"A":3,"C":1,"N":3},"t":{"A":0,"C":0,"N":0},"uT":7,"tT":0},{"c":"504","n":"Bagaces","p":"Guanacaste","km2":1278.0,"pob":23709,"a12":[-31.7,-40.5,-33.9,-70.8,-20.3,-32.8,-33.9,-13.6,-49.0,10.1,-23.8,-75.3],"u":{"I":1,"N":1},"t":{"I":0,"N":0},"uT":2,"tT":0},{"c":"215","n":"Guatuso","p":"Alajuela","km2":752.9,"pob":18316,"a12":[-58.1,-45.8,-23.3,-41.0,-14.6,-1.7,-10.0,-5.7,-22.5,-5.8,-7.2,-42.4],"u":{"A":1,"G":2},"t":{"A":0,"G":0},"uT":3,"tT":0},{"c":"214","n":"Los Chiles","p":"Alajuela","km2":1332.8,"pob":34701,"a12":[-31.6,-55.7,-36.4,-44.9,0.7,6.7,5.0,0.3,-15.5,-8.1,8.5,-38.6],"u":{"A":2,"G":2,"O":1},"t":{"A":0,"G":0,"O":0},"uT":5,"tT":0},{"c":"501","n":"Liberia","p":"Guanacaste","km2":1442.1,"pob":80130,"a12":[-74.5,-53.7,-67.4,-51.2,-17.5,-30.5,-54.9,-22.2,-43.2,3.6,-38.8,-66.6],"u":{"A":1,"C":3,"D":1,"F":1,"G":5,"H":4,"I":8,"N":4,"O":1,"P":4,"Q":1,"R":4,"S":2},"t":{"A":0,"C":0,"D":0,"F":0,"G":214,"H":0,"I":1637,"N":490,"O":0,"P":222,"Q":0,"R":312,"S":0},"uT":39,"tT":2875},{"c":"213","n":"Upala","p":"Alajuela","km2":1592.6,"pob":57361,"a12":[-44.9,-58.8,-30.9,-51.9,-33.3,-11.0,-23.1,3.6,-30.0,-6.0,2.4,-46.9],"u":{"A":2,"C":1,"I":2,"O":1},"t":{"A":0,"C":0,"I":0,"O":0},"uT":6,"tT":0},{"c":"510","n":"La Cruz","p":"Guanacaste","km2":1386.0,"pob":26829,"a12":[-39.3,-36.5,-50.5,-39.1,-28.3,-24.0,-29.6,-2.7,-40.1,-9.9,-16.8,-56.4],"u":{"A":1,"C":1,"G":1,"H":1,"N":1,"O":1},"t":{"A":0,"C":0,"G":0,"H":0,"N":0,"O":0},"uT":6,"tT":0}];
+const SECC = [
+ ['A','Agricultura, ganadería, silvicultura y pesca'],['B','Explotación de minas y canteras'],
+ ['C','Industrias manufactureras'],['D','Suministro de electricidad, gas, vapor y aire acond.'],
+ ['E','Suministro de agua; saneamiento y gestión de desechos'],['F','Construcción'],
+ ['G','Comercio; reparación de vehículos'],['H','Transporte y almacenamiento'],
+ ['I','Alojamiento y servicios de comida'],['J','Información y comunicaciones'],
+ ['K','Actividades financieras y de seguros'],['L','Actividades inmobiliarias'],
+ ['M','Actividades profesionales, científicas y técnicas'],['N','Servicios administrativos y de apoyo'],
+ ['O','Administración pública y defensa; seguridad social'],['P','Enseñanza'],
+ ['Q','Salud humana y asistencia social'],['R','Artísticas, entretenimiento y recreativas'],
+ ['S','Otras actividades de servicios'],['U','Organizaciones y órganos extraterritoriales']
+];
+CANT.forEach(c=>{ c.prom=+mean(c.a12).toFixed(1); c.medm=+median(c.a12).toFixed(1); });
+const valOfC = c => per==='prom'? c.prom : per==='medm'? c.medm : c.a12[per];
+let curSecc='A';
+const selSecc=document.getElementById('selSecc');
+SECC.forEach(([s,n])=>{ if(CANT.some(c=>c.u[s])){ const o=document.createElement('option'); o.value=s; o.textContent=`${s} — ${n}`; selSecc.appendChild(o);} });
+selSecc.addEventListener('change',e=>{ curSecc=e.target.value; drawTejido(); });
+
+function drawTejido(){
+  const holder=document.getElementById('tejChart');
+  const W=holder.clientWidth||700, H=Math.max(430, Math.min(560, W*.72));
+  const mL=52,mR=16,mT=26,mB=46, iw=W-mL-mR, ih=H-mT-mB;
+  const s=curSecc, sName=SECC.find(x=>x[0]===s)[1];
+  const data=CANT.filter(c=>c.uT>0).map(c=>({...c, sh:100*(c.u[s]||0)/c.uT, tr:c.t[s]||0, v:valOfC(c)}));
+  const natU=d3.sum(data,c=>c.u[s]||0), natT=d3.sum(data,c=>c.tr), natUT=d3.sum(data,c=>c.uT);
+  const natShare=100*natU/natUT;
+
+  const y=d3.scaleLinear().domain([0, Math.max(d3.max(data,d=>d.sh)*1.08, natShare*1.4, 5)]).range([ih,0]).nice();
+  const vs=data.map(d=>d.v);
+  const x=d3.scaleLinear().domain([Math.min(d3.min(vs)-5,-15), Math.max(d3.max(vs)+5,15)]).range([0,iw]).nice();
+
+  d3.select('#tejChart').selectAll('*').remove();
+  const svg=d3.select('#tejChart').append('svg').attr('width',W).attr('height',H).attr('role','img')
+    .attr('aria-label','Dispersión cantonal: anomalía de precipitación contra especialización productiva');
+  const g=svg.append('g').attr('transform',`translate(${mL},${mT})`);
+
+  // bandas de las categorías oficiales de anomalía (sombreado + fronteras punteadas)
+  const [dLo,dHi]=x.domain();
+  const BORDES=[-75,-50,-25,-10,10,25,50,75];
+  let prev=dLo;
+  [...BORDES,dHi].forEach(b=>{
+    const hiB=Math.min(b,dHi);
+    if(hiB>prev){
+      const c=catOf((prev+hiB)/2);
+      g.append('rect').attr('x',x(prev)).attr('width',x(hiB)-x(prev)).attr('y',0).attr('height',ih).attr('fill',c.c).attr('opacity',.10);
+      if(x(hiB)-x(prev)>58) g.append('text').attr('x',(x(prev)+x(hiB))/2).attr('y',11).attr('text-anchor','middle')
+        .attr('font-size',9).attr('fill','#5C6E76').attr('font-family','IBM Plex Mono')
+        .text(c.n.replace('Déficit','Déf.').replace('Superávit','Sup.'));
+      prev=hiB;
+    }
+  });
+  BORDES.filter(b=>b>dLo&&b<dHi).forEach(b=>{
+    g.append('line').attr('x1',x(b)).attr('x2',x(b)).attr('y1',0).attr('y2',ih).attr('stroke','#17262E').attr('opacity',.22).attr('stroke-dasharray','3 4');
+  });
+  g.append('line').attr('y1',0).attr('y2',ih).attr('x1',x(0)).attr('x2',x(0)).attr('stroke','#17262E').attr('opacity',.3).attr('stroke-dasharray','3 3');
+  // participación nacional de la sección
+  g.append('line').attr('y1',y(natShare)).attr('y2',y(natShare)).attr('x1',0).attr('x2',iw).attr('stroke','#17262E').attr('stroke-dasharray','4 4').attr('opacity',.45);
+  g.append('text').attr('x',iw-4).attr('y',y(natShare)-5).attr('text-anchor','end').attr('font-size',10).attr('fill','#17262E').attr('font-family','IBM Plex Mono').text('nacional '+natShare.toFixed(1).replace('.',',')+'%');
+
+  g.append('g').attr('transform',`translate(0,${ih})`).call(d3.axisBottom(x).ticks(8).tickFormat(d=>d+'%')).call(t=>t.selectAll('text').attr('font-family','IBM Plex Mono').attr('font-size',10.5));
+  g.append('g').call(d3.axisLeft(y).ticks(7).tickFormat(d=>d+'%')).call(t=>t.selectAll('text').attr('font-family','IBM Plex Mono').attr('font-size',10.5));
+  svg.append('text').attr('x',mL+iw/2).attr('y',H-8).attr('text-anchor','middle').attr('font-size',12).attr('fill','#5C6E76').text('Anomalía de precipitación (%) · '+perLabel()+' — más negativo = más seco');
+  svg.append('text').attr('transform',`translate(14,${mT+ih/2}) rotate(-90)`).attr('text-anchor','middle').attr('font-size',12).attr('fill','#5C6E76').text('% de UJ grandes del cantón en la sección '+s+' (2024)');
+
+  const tip=document.getElementById('tTip'), holderCard=holder.parentElement;
+  const shMax=d3.max(data,d=>d.sh)||1;
+  const tCol=d3.scaleLinear().domain([0,.35,.7,1]).range(['#D8CBEC','#9B7FD0','#5B3E9E','#1E0F42']);
+  const colSh = v => tCol((v||0)/shMax);
+  g.selectAll('circle').data([...data].sort((a,b)=>a.sh-b.sh)).join('circle')
+    .attr('cx',d=>x(d.v)).attr('cy',d=>y(d.sh)).attr('r',5.5)
+    .attr('fill',d=>colSh(d.sh)).attr('opacity',.92)
+    .attr('stroke','#17262E').attr('stroke-width',1).style('cursor','pointer')
+    .on('mousemove',function(ev,d){
+      const r=holderCard.getBoundingClientRect();
+      tip.style.opacity=1; tip.style.left=(ev.clientX-r.left+12)+'px'; tip.style.top=(ev.clientY-r.top-10)+'px';
+      tip.innerHTML=`<b>${d.n}</b> · ${d.p}<br>Sección ${s}: <span class="mono">${d.sh.toFixed(1).replace('.',',')}%</span> de sus UJ (${fmtInt(d.u[s]||0)} de ${fmtInt(d.uT)})<br>Trabajadores: <span class="mono">${fmtInt(d.tr)}</span><br>Anomalía <span class="mono">${fmt1(d.v)}%</span> — ${catOf(d.v).n}`;
+      d3.select(this).attr('stroke-width',2.2);
+    })
+    .on('mouseleave',function(){ tip.style.opacity=0; d3.select(this).attr('stroke-width',1); });
+
+  // leyenda: color por trabajadores (los sombreados de fondo son las categorías de anomalía)
+  document.getElementById('tejLegend').innerHTML =
+    `<span>Color del punto ∝ % de UJ del cantón en la sección:</span>
+     <span class="mono" style="color:var(--ink)">0%</span>
+     <span style="display:inline-block;width:130px;height:10px;border-radius:5px;border:1px solid var(--line);background:linear-gradient(90deg,#D8CBEC,#9B7FD0 35%,#5B3E9E 70%,#1E0F42)"></span>
+     <span class="mono" style="color:var(--ink)">${shMax.toFixed(0)}%</span>
+     <span style="margin-left:10px">Fondo: categorías oficiales de anomalía</span>`;
+
+  // caption con correlación
+  const r = pearson(data.map(d=>d.sh), data.map(d=>d.v));
+  document.getElementById('tejCaption').innerHTML =
+    `Correlación entre especialización en la sección ${s} y anomalía (${perLabel().toLowerCase()}): <span class="mono">r = ${r.toFixed(2)}</span> sobre ${data.length} cantones. `+
+    (r<-0.2? 'Los cantones más especializados tienden al déficit: empleo expuesto a sequía.' : r>0.2? 'Los cantones más especializados tienden al superávit: empleo expuesto a exceso hídrico e inundación.' : 'Sin patrón claro entre especialización y anomalía.');
+
+  // panel: totales y cantones con presencia de la sección, ordenados por anomalía
+  document.getElementById('tejTitle').textContent = s+' — '+sName;
+  const conSecc=[...data].filter(d=>(d.u[s]||0)>0 || d.tr>0).sort((a,b)=>a.v-b.v);
+  document.getElementById('tejStats').innerHTML = `${fmtInt(natU)} UJ grandes (${natShare.toFixed(1).replace('.',',')}% del total nacional) · ${fmtInt(natT)} trabajadores. ${conSecc.length} cantones con presencia de la sección, ordenados por anomalía: del mayor déficit al mayor superávit.`;
+  let th='<tr><th>Cantón</th><th>% UJ</th><th>Anom.</th></tr>';
+  conSecc.forEach(d=>{ th+=`<tr><td><b>${d.n}</b><br><span style="color:var(--muted);font-size:11px">${d.p}</span></td><td class="mono">${d.sh.toFixed(1).replace('.',',')}%</td><td class="mono"><span class="leg-sw" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${colAnom(d.v)};vertical-align:-1px"></span> ${fmt1(d.v)}%</td></tr>`; });
+  document.getElementById('tejTable').innerHTML=th;
+}
+
 /* Conteos en tarjetas de gestión */
 function updateGRCounts(){
   const counts={Q1:0,Q2:0,Q3:0,Q4:0,E1:0,E2:0}, pops={Q1:0,Q2:0,Q3:0,Q4:0,E1:0,E2:0};
@@ -891,6 +1029,7 @@ setPeriodo('prom');
 drawQuad();
 window.addEventListener('resize',()=>{
   if(document.getElementById('sec-cuadrante').classList.contains('active')) drawQuad();
+  if(document.getElementById('sec-tejido').classList.contains('active')) drawTejido();
   if(document.getElementById('sec-analisis').classList.contains('active')) drawSeason();
 });
 </script>
